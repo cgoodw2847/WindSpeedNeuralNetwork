@@ -1,0 +1,41 @@
+import pandas as pd
+
+df = pd.read_csv("C:/Users/camer/OneDrive/Desktop/Python/Neural Network Scripts/silon.csv", parse_dates=["Date and hour"])
+
+dates= [6671,	7031,
+15431,	15791,
+24215,	24575,
+32975,	33335,
+41831,	41855]
+
+y2 = df.iloc[dates[8]:dates[9], 1]
+
+# Upload to MQTT
+import time
+from Adafruit_IO import Client, Feed, RequestError
+
+run_count = y2
+
+# Set to your Adafruit IO key.
+ADAFRUIT_IO_KEY = "aio_wyeU68eUC32XnNWcIrzFKWYEbQhX"
+
+# Set to your Adafruit IO username.
+ADAFRUIT_IO_USERNAME = "ckg33"
+
+# Create an instance of the REST client.
+aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
+
+try:
+    foo = aio.feeds('foo4')
+except RequestError: # Doesn't exist, create a new feed
+    feed = Feed(name="foo4")
+    foo = aio.create_feed(feed)
+
+while True:
+    a = dates[8]
+    while a<dates[9]:
+        a = a+1
+        print('sending count: ', run_count[a])
+        aio.send_data('foo4', run_count[a])
+    
+        time.sleep(3)
