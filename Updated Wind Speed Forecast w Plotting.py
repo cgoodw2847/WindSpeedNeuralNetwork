@@ -27,38 +27,6 @@ dates= [6671,	7031,
 24215,	24575,
 32975,	33335,
 41831,	41855]
-
-y2 = df.iloc[dates[8]:dates[9], 1]
-
-#%% Upload to MQTT
-import time
-from Adafruit_IO import Client, Feed, RequestError
-
-run_count = y2
-
-# Set to your Adafruit IO key.
-ADAFRUIT_IO_KEY = "aio_QXAX87ERI7xOfUubqzcBm03ZFdp0"
-
-# Set to your Adafruit IO username.
-ADAFRUIT_IO_USERNAME = "ckg33"
-
-# Create an instance of the REST client.
-aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
-
-try:
-    foo = aio.feeds('foo1')
-except RequestError: # Doesn't exist, create a new feed
-    feed = Feed(name="foo1")
-    foo = aio.create_feed(feed)
-
-while True:
-    a = dates[8]
-    while a<dates[9]:
-        a = a+1
-        print('sending count: ', run_count[a])
-        aio.send_data('foo1', run_count[a])
-    
-        time.sleep(3)
     
 #%%
 # Down-sampling and split into training and testing sets
@@ -180,7 +148,7 @@ plt.legend()
 plt.show()
 
 # Forming a Density Matrix
-hist_data, bin_edges = np.histogram(predicted_speed, bins=range(0,11))
+hist_data, bin_edges = np.histogram(predicted_speed, bins=range(0,18))
 bin_centers = 0.5 * (bin_edges[1:] + bin_edges[:-1])
 
 density_matrix = pd.DataFrame({
